@@ -1,8 +1,8 @@
 package version
 
 import (
+	"fmt"
 	"github.com/coreos/go-semver/semver"
-	"github.com/sirupsen/logrus"
 )
 
 var (
@@ -23,6 +23,6 @@ var TradeVer = semver.Version{
 
 // LogAppInfo 打印版本信息
 func LogAppInfo() {
-	logrus.Infof("\nAppVersion: %s\nApiVersion: %s\nGitHash: %s\nBuildTime: %s\n\n",
+	fmt.Printf("AppVersion: %d\nApiVersion: %d\nGitHash: %s\nBuildTime: %s\n\n",
 		TradeVer.Major, TradeVer.Minor, GitHash, BuildTime)
 }
