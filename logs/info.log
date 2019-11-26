@@ -1,0 +1,12 @@
+time="2019-11-26T17:45:07+08:00" level=info msg="\nAppVersion: %!s(int64=0)\nApiVersion: %!s(int64=1)\nGitHash: Not provided\nBuildTime: Not provided\n\n"
+time="2019-11-26T17:46:22+08:00" level=info msg="\nAppVersion: %!s(int64=0)\nApiVersion: %!s(int64=1)\nGitHash: Not provided\nBuildTime: Not provided\n\n"
+[36mINFO[0m[0000] 
+AppVersion: %!s(int64=0)
+ApiVersion: %!s(int64=1)
+GitHash: Not provided
+BuildTime: Not provided
+ 
+time="2019-11-26T17:47:52+08:00" level=info msg="\nAppVersion: %!s(int64=0)\nApiVersion: %!s(int64=1)\nGitHash: Not provided\nBuildTime: Not provided\n\n"
+time="2019-11-26T17:48:03+08:00" level=info msg="\nAppVersion: %!s(int64=0)\nApiVersion: %!s(int64=1)\nGitHash: Not provided\nBuildTime: Not provided\n\n"
+time="2019-11-26T17:55:23+08:00" level=info msg="\nAppVersion: %!s(int64=0)\nApiVersion: %!s(int64=1)\nGitHash: Not provided\nBuildTime: Not provided\n\n"
+time="2019-11-26T17:56:54+08:00" level=info msg="\nAppVersion: %!s(int64=0)\nApiVersion: %!s(int64=1)\nGitHash: Not provided\nBuildTime: Not provided\n\n"

@@ -1,0 +1,9 @@
+appname: Trade
+httpport: :8080
+runmode: dev
+logs:
+  path: logs
+  name: info
+  suffix: info
+mongo:
+  addr: 127.0.0.1:27017
