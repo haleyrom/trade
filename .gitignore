@@ -1,0 +1,9 @@
+*.temp
+*.tmp
+*.exe
+*.exe~
+*.pprof
+.DS_Store
+.idea/
+/cache/*
+
