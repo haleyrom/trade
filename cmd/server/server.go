@@ -4,8 +4,8 @@ import (
 	"github.com/haleyrom/trade/cmd"
 	"github.com/haleyrom/trade/core"
 	"github.com/haleyrom/trade/pkg/middleware"
+	"github.com/haleyrom/trade/pkg/version"
 	"github.com/haleyrom/trade/router"
-	"github.com/haleyrom/trade/version"
 	"github.com/sirupsen/logrus"
 )
 

@@ -6,23 +6,46 @@ PACKAGES ?= $(shell GO111MODULE=off $(GO) list ./...)
 VETPACKAGES ?= $(shell GO111MODULE=off $(GO) list ./...)
 GOFILES := $(shell find . -name "*.go" -type f ! -path "./vendor/*")
 
+TAGET_APP = receive_msg
 TAGS = jsoniter
 TAGS_PPROF = $(TAGS) pprof
 
-LDFLAGS += -X "weiliao/pkg/version.BuildTime=$(shell date -u '+%Y-%m-%d %I:%M:%S %Z')"
-LDFLAGS += -X "weiliao/pkg/version.GitHash=$(shell git rev-parse HEAD)"
+LDFLAGS += -X "github.com/haleyrom/trade/pkg/version.BuildTime=$(shell date -u '+%Y-%m-%d %I:%M:%S %Z')"
+LDFLAGS += -X "ithub.com/haleyrom/trade/pkg/version.GitHash=$(shell git rev-parse HEAD)"
 
-.PHONY: default
-default: build
+.PHONY: start build
 
-.PHONY: ci
-ci: lint vet test
+NOW = $(shell date -u '+%Y%m%d%I%M%S')
+
+SERVER_BIN = "./cmd/server/server"
+RELEASE_ROOT = "release"
+RELEASE_SERVER = "release/server"
+
+
+all: start
 
 .PHONY: fmt
 fmt:
 	$(GOFMT) -w $(GOFILES)
 
-.PHONY: tools
-tools:
-	$(GO_OFF) get golang.org/x/lint/golint
-	$(GO_OFF) get github.com/client9/misspell/cmd/misspell
+build:
+	@$(GO) build -ldflags '$(LDFLAGS)' -tags '$(TAGS)' -o $(SERVER_BIN) ./cmd/server
+
+start:
+	@go run -ldflags $(SERVER_BIN) ./cmd/server
+	$(SERVER_BIN) -c ./assets/config/conf.yaml
+
+serve:
+	@$(GO) run -ldflags '$(LDFLAGS)' -tags '$(TAGS)' ./cmd/server/server.go
+
+test:
+	@go test -cover -race ./...
+
+clean:
+	rm -rf data release $(SERVER_BIN) ./internal/app/test/data ./cmd/server/data
+
+pack: build
+	rm -rf $(RELEASE_ROOT)
+	mkdir -p $(RELEASE_SERVER)
+	cp -r $(SERVER_BIN) configs $(RELEASE_SERVER)
+	cd $(RELEASE_ROOT) && zip -r server.$(NOW).zip "server"
