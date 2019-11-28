@@ -25,7 +25,7 @@ func InitConf() {
 
 // InitStorage 初始化数据库
 func InitStorage() {
-	if err := core.Orm.Init(core.Conf.Mongo.Addr); err != nil {
+	if err := core.Orm.Init(core.Conf); err != nil {
 		logrus.Error("init orm client fail:", err)
 		panic(fmt.Errorf("init orm client fail:", err))
 	}

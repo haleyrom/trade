@@ -7,3 +7,7 @@ logs:
   suffix: info
 mongo:
   addr: 127.0.0.1:27017
+  username:
+  password:
+  limit: 500
+  database: trade

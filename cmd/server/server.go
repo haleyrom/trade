@@ -31,6 +31,9 @@ func main() {
 		port = core.Conf.HttpPort
 	}
 
+	defer func() {
+		core.Orm.Clone()
+	}()
 	// Listen and Server in 0.0.0.0:8080
 	r.Run(port)
 }

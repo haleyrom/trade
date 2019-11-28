@@ -14,10 +14,11 @@ type LogsConf struct {
 
 // MongoConf mongo配置
 type MongoConf struct {
-	Addr     string `yaml:"addr"`
-	Port     string `yaml:"port"`
-	Username string `yaml:"username"`
-	Password string `yaml:"password"`
+	Addr      string `yaml:"addr"`
+	Username  string `yaml:"username"`
+	Password  string `yaml:"password"`
+	PoolLimit int    `yaml:"limit"`
+	Database  string `yaml:"database"`
 }
 
 // LoadConfig 加载配置
