@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/haleyrom/trade/cmd"
+	cmd "github.com/haleyrom/trade/cmd/core"
 	"github.com/haleyrom/trade/core"
 	"github.com/haleyrom/trade/pkg/middleware"
 	"github.com/haleyrom/trade/pkg/version"
@@ -9,6 +9,7 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
+// init init
 func init() {
 	cmd.Init()
 }

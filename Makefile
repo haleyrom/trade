@@ -17,7 +17,7 @@ LDFLAGS += -X "ithub.com/haleyrom/trade/pkg/version.GitHash=$(shell git rev-pars
 
 NOW = $(shell date -u '+%Y%m%d%I%M%S')
 
-SERVER_BIN = "./cmd/server/server"
+SERVER_BIN = "./cmd/core/server"
 RELEASE_ROOT = "release"
 RELEASE_SERVER = "release/server"
 
@@ -49,3 +49,8 @@ pack: build
 	mkdir -p $(RELEASE_SERVER)
 	cp -r $(SERVER_BIN) configs $(RELEASE_SERVER)
 	cd $(RELEASE_ROOT) && zip -r server.$(NOW).zip "server"
+
+.PHONY: tools
+tools:
+    $(GO_OFF) get golang.org/x/lint/golint
+    $(GO_OFF) get github.com/client9/misspell/cmd/misspell
