@@ -13,7 +13,7 @@ func Init() {
 	InitStorage()
 }
 
-// InitConf 初始化配置
+// InitConf  初始化配置
 func InitConf() {
 	// 获取配置
 	configFilePath := flag.String("C", "assets/config/conf.yaml", "config file path")

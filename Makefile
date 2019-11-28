@@ -17,10 +17,9 @@ LDFLAGS += -X "ithub.com/haleyrom/trade/pkg/version.GitHash=$(shell git rev-pars
 
 NOW = $(shell date -u '+%Y%m%d%I%M%S')
 
-SERVER_BIN = "./cmd/core/server"
+SERVER_BIN = "./cmd/server/server"
 RELEASE_ROOT = "release"
 RELEASE_SERVER = "release/server"
-
 
 all: start
 
@@ -31,11 +30,7 @@ fmt:
 build:
 	@$(GO) build -ldflags '$(LDFLAGS)' -tags '$(TAGS)' -o $(SERVER_BIN) ./cmd/server
 
-start:
-	@go run -ldflags $(SERVER_BIN) ./cmd/server
-	$(SERVER_BIN) -c ./assets/config/conf.yaml
-
-serve:
+server:
 	@$(GO) run -ldflags '$(LDFLAGS)' -tags '$(TAGS)' ./cmd/server/server.go
 
 test:
@@ -50,7 +45,28 @@ pack: build
 	cp -r $(SERVER_BIN) configs $(RELEASE_SERVER)
 	cd $(RELEASE_ROOT) && zip -r server.$(NOW).zip "server"
 
+.PHONY: lint
+lint:
+	@hash golint > /dev/null 2>&1; if [ $$? -ne 0 ]; then \
+		$(GO_OFF) get -u golang.org/x/lint/golint; \
+	fi
+	for PKG in $(PACKAGES); do golint -min_confidence 1.0 -set_exit_status $$PKG || exit 1; done;
+
+.PHONY: misspell-check
+misspell-check:
+	@hash misspell > /dev/null 2>&1; if [ $$? -ne 0 ]; then \
+		$(GO_OFF) get -u github.com/client9/misspell/cmd/misspell; \
+	fi
+	misspell -error $(GOFILES)
+
+.PHONY: misspell
+misspell:
+	@hash misspell > /dev/null 2>&1; if [ $$? -ne 0 ]; then \
+		$(GO_OFF) get -u github.com/client9/misspell/cmd/misspell; \
+	fi
+	misspell -w $(GOFILES)
+
 .PHONY: tools
 tools:
-    $(GO_OFF) get golang.org/x/lint/golint
-    $(GO_OFF) get github.com/client9/misspell/cmd/misspell
+	$(GO_OFF) get golang.org/x/lint/golint
+	$(GO_OFF) get github.com/client9/misspell/cmd/misspell

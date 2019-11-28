@@ -14,6 +14,7 @@ func init() {
 	cmd.Init()
 }
 
+// main main
 func main() {
 	// 注册路由
 	r := router.InitRouter()
