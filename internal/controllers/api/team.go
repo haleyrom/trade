@@ -9,6 +9,13 @@ import (
 )
 
 // CreateTeam 创建团队
+// @Tags 1. CreateTeam
+// @Summary 创建团队接口
+// @Description 创建团队
+// @Produce json
+// @Param name query string true "团队名称"
+// @Success 200
+// @Router /api/team/create [post]
 func CreateTeam(c *gin.Context) {
 	param := &params.CreateTeamParam{
 		Claims: core.UserInfoPool.Get().(*params.BaseParam),
@@ -20,8 +27,9 @@ func CreateTeam(c *gin.Context) {
 		return
 	}
 
+	// TODO： 暂未验证权限
 	team := &models.Teams{}
-	if err := team.CreateTeams(param); err != nil {
+	if err := team.CreateTeam(param); err != nil {
 		core.GResp.Failure(err)
 		return
 	}
@@ -31,7 +39,19 @@ func CreateTeam(c *gin.Context) {
 
 // JoinTeam 加入团队
 func JoinTeam(c *gin.Context) {
+	param := &params.JoinTeamParam{
+		Claims: core.UserInfoPool.Get().(*params.BaseParam),
+	}
+
+	// 绑定参数
+	if err := c.ShouldBind(param); err != nil {
+		core.GResp.Failure(err)
+		return
+	}
+
 	// TODO
+	//team := &models.Teams{}
+
 }
 
 // ExitTeam 退出团队

@@ -22,8 +22,8 @@ func (t *Teams) GetTable() string {
 	return "teams"
 }
 
-// CreateTeams CreateTeams
-func (t *Teams) CreateTeams(param *params.CreateTeamParam) error {
+// CreateTeams 创建团队
+func (t *Teams) CreateTeam(param *params.CreateTeamParam) error {
 	var err error
 	timer := int(time.Now().Unix())
 	t.Id, t.Name = bson.NewObjectId(), param.Name
@@ -42,10 +42,16 @@ func (t *Teams) CreateTeams(param *params.CreateTeamParam) error {
 			Team:   *t,
 			User:   t.Creator,
 			Role:   Roles{},
-			Type:   0,
+			Type:   TeamUserTypeOwner,
 			Status: 0,
 		}
 		err = teamUser.JoinTeamUser()
 	}
 	return err
+}
+
+// ExistTeam 判断是否存在团队
+func (t *Teams) IsExistTeam(param *params.JoinTeamParam) error {
+
+	return nil
 }

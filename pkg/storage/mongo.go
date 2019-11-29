@@ -29,7 +29,7 @@ func (m *MongoClient) Init(c config.Configure) error {
 
 	m.Client.SetMode(mgo.Monotonic, true)
 	m.Database = c.Mongo.Database
-	//default is 4096
+	// default is 4096
 	logrus.Infof("Connected MongoDB!")
 	return nil
 }

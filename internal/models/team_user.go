@@ -18,6 +18,13 @@ type TeamUser struct {
 	ModifyTime int           `json:"modify_time" bson:"modify_time"` // 更新时间
 }
 
+const (
+	// teamUserTypePublic 普通用户
+	TeamUserPublic int8 = 0 + iota
+	// TeamUserTypeOwner 创建用户
+	TeamUserTypeOwner
+)
+
 // GetTable GetTable
 func (t *TeamUser) GetTable() string {
 	return "team_user"

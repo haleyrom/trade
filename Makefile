@@ -18,6 +18,7 @@ LDFLAGS += -X "ithub.com/haleyrom/trade/pkg/version.GitHash=$(shell git rev-pars
 NOW = $(shell date -u '+%Y%m%d%I%M%S')
 
 SERVER_BIN = "./cmd/server/server"
+SWAG_BIN = "./docs"
 RELEASE_ROOT = "release"
 RELEASE_SERVER = "release/server"
 
