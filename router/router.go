@@ -19,6 +19,6 @@ func InitRouter() *gin.Engine {
 func registerRouter(r *gin.Engine) {
 	v1 := r.Group("/api")
 	{
-		v1.GET("/index", api.CreateTeam)
+		v1.POST("/index", api.CreateTeam)
 	}
 }

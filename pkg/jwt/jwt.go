@@ -14,14 +14,14 @@ var (
 	// TokenMalformed token未携带
 	TokenMalformed error = errors.New("That's not even a token")
 	// TokenInvalid token无效
-	TokenInvalid error = errors.New("Couldn't handle this token")
+	TokenInvalid error = errors.New("Couldn't handle this token:")
 	// SignKey 签名
 	SignKey string = "mySignKey"
 )
 
 // CustomClaims 载荷，可以加一些自己需要的信息
 type CustomClaims struct {
-	ID     string `json:"userId"`
+	ID     string `json:"UserId"`
 	Name   string `json:"name"`
 	Mobile string `json:"mobile"`
 	jwt.StandardClaims
