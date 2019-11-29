@@ -1,13 +1,21 @@
 package main
 
 import (
+	"context"
+	"fmt"
 	cmd "github.com/haleyrom/trade/cmd/core"
 	"github.com/haleyrom/trade/core"
 	"github.com/haleyrom/trade/pkg/middleware"
 	"github.com/haleyrom/trade/pkg/version"
 	"github.com/haleyrom/trade/router"
 	"github.com/sirupsen/logrus"
+	"net/http"
+	"os"
+	"os/signal"
+	"time"
 )
+
+var srv *http.Server
 
 // init init
 func init() {
@@ -26,15 +34,44 @@ func main() {
 	// 版本信息
 	version.LogAppInfo()
 
-	port := ":8080"
+	srv = &http.Server{
+		Addr:    ":8080",
+		Handler: r,
+	}
 
 	if len(core.Conf.HttpPort) > core.DefaultNilNum {
-		port = core.Conf.HttpPort
+		srv.Addr = core.Conf.HttpPort
 	}
 
 	defer func() {
+		clone()
+	}()
+
+	go func() {
+		// 服务连接
+		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+			panic(fmt.Sprintf("listen: %s\n", err))
+		}
+	}()
+	fmt.Printf("Listening and serving HTTP on %s\n", srv.Addr)
+}
+
+// clone 退出
+func clone() {
+	// 等待中断信号以优雅地关闭服务器（设置 5 秒的超时时间）
+	quit := make(chan os.Signal)
+	signal.Notify(quit, os.Interrupt)
+	<-quit
+	logrus.Println("Shutdown Server ...")
+
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer func() {
+		cancel()
 		core.Orm.Clone()
 	}()
-	// Listen and Server in 0.0.0.0:8080
-	_ = r.Run(port)
+
+	if err := srv.Shutdown(ctx); err != nil {
+		logrus.Fatal("Server Shutdown:", err)
+	}
+	logrus.Println("Server exiting")
 }

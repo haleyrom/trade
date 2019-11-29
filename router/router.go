@@ -9,7 +9,7 @@ import (
 // InitRouter 初始化路由
 func InitRouter() *gin.Engine {
 	r := gin.Default()
-	r.Use(middleware.HTTPInterceptor())
+	r.Use(middleware.HttpBindGResp(), middleware.HttpInterceptor())
 
 	registerRouter(r)
 	return r

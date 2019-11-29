@@ -2,13 +2,14 @@ package api
 
 import (
 	"github.com/gin-gonic/gin"
-	"net/http"
+	"github.com/haleyrom/trade/core"
+	"github.com/haleyrom/trade/internal/resp"
 )
 
 // CreateTeam 创建团队
 func CreateTeam(c *gin.Context) {
 	// TODO
-	c.JSON(http.StatusOK, gin.H{"message": 1})
+	core.GResp.Success(resp.EmptyData())
 }
 
 // JoinTeam 加入团队

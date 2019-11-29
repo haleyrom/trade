@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/haleyrom/trade/core"
+	"github.com/haleyrom/trade/internal/resp"
 	"github.com/haleyrom/trade/pkg/jwt"
-	"net/http"
 )
 
 var (
@@ -13,9 +13,10 @@ var (
 	HttpHeadToken string = "token"
 )
 
-// HTTPInterceptor 拦截器
-func HTTPInterceptor() gin.HandlerFunc {
+// HttpInterceptor 拦截器
+func HttpInterceptor() gin.HandlerFunc {
 	return func(c *gin.Context) {
+
 		var err error
 		if token := c.Request.Header.Get(HttpHeadToken); len(token) > core.DefaultNilNum {
 			j := jwt.NewJWT()
@@ -24,23 +25,34 @@ func HTTPInterceptor() gin.HandlerFunc {
 				c.Set("claims", claims)
 			}
 		} else {
-			err = fmt.Errorf("请求未携带token，无权限访问")
+			err = fmt.Errorf("%d", resp.CodeNoToken)
 		}
 
 		switch err {
 		case nil:
 			c.Next()
 		case jwt.TokenExpired:
-			err = fmt.Errorf("授权已过期")
+			fallthrough
+		case jwt.TokenNotValidYet:
+			fallthrough
+		case jwt.TokenMalformed:
+			fallthrough
+		case jwt.TokenInvalid:
+			err = fmt.Errorf("%d", resp.CodeIllegalToken)
 			fallthrough
 		default:
-			c.JSON(http.StatusOK, gin.H{
-				"status":  -1,
-				"message": err,
-			})
+			core.GResp.Failure(err)
 			c.Abort()
 			return
 		}
 	}
+}
 
+// HttpBindGResp HttpBindGResp
+func HttpBindGResp() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		core.GResp = &resp.Resp{
+			c,
+		}
+	}
 }

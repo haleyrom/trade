@@ -14,7 +14,7 @@ var (
 	// TokenMalformed token未携带
 	TokenMalformed error = errors.New("That's not even a token")
 	// TokenInvalid token无效
-	TokenInvalid error = errors.New("Couldn't handle this token:")
+	TokenInvalid error = errors.New("Couldn't handle this token")
 	// SignKey 签名
 	SignKey string = "mySignKey"
 )

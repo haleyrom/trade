@@ -75,6 +75,13 @@ func EmptyData() *struct{} {
 	return emptyData
 }
 
+// Ok 返回成功响应数据封包
+func Ok(data interface{}) *ResData {
+	resData := okDataPool.Get().(*ResData)
+	resData.Data = data
+	return resData
+}
+
 // RecycleOk 回收Ok响应数据封包
 func RecycleOk(data *ResData) {
 	data.Data = nil // Notice:一定要赋nil避免泄内存
