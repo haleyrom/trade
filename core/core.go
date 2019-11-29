@@ -10,4 +10,9 @@ var (
 	Conf config.Configure
 	// Orm 数据
 	Orm storage.MongoClient
+
+	// DefaultNilString DefString
+	DefaultNilString string = ""
+	// DefaultNilNum DefaultNilNum
+	DefaultNilNum int = 0
 )

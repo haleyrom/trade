@@ -23,11 +23,12 @@ func main() {
 	_, out := middleware.OpenLoggerFile(core.Conf)
 	// 日志文件落地
 	logrus.SetOutput(out)
+	// 版本信息
 	version.LogAppInfo()
 
 	port := ":8080"
 
-	if len(core.Conf.HttpPort) > 0 {
+	if len(core.Conf.HttpPort) > core.DefaultNilNum {
 		port = core.Conf.HttpPort
 	}
 
@@ -35,5 +36,5 @@ func main() {
 		core.Orm.Clone()
 	}()
 	// Listen and Server in 0.0.0.0:8080
-	r.Run(port)
+	_ = r.Run(port)
 }

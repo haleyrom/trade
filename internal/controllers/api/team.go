@@ -1,10 +1,14 @@
 package api
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/gin-gonic/gin"
+	"net/http"
+)
 
 // CreateTeam 创建团队
 func CreateTeam(c *gin.Context) {
 	// TODO
+	c.JSON(http.StatusOK, gin.H{"message": 1})
 }
 
 // JoinTeam 加入团队
