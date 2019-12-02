@@ -27,6 +27,13 @@ type ReadUserListTeamParam struct {
 	Size   int        `json:"size" form:"size"  binding:"required"`
 }
 
+// ReadTeamUserParam 读取团队用户信息参数
+type ReadTeamUserParam struct {
+	Claims *BaseParam `json:"claims" form:"claims"`
+	Tid    string     `json:"tid" form:"tid" binding:"required"`
+	Uid    string     `json:"uid" form:"uid" binding:"required"`
+}
+
 // JoinTeamParam 加入团队参数
 type JoinTeamParam teamBaseParam
 

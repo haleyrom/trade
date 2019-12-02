@@ -189,3 +189,13 @@ func (t *TeamUser) CountTeamUser(tid string) (int, error) {
 	}
 	return core.Orm.Count(t.GetTable(), query)
 }
+
+// ReadTeamUser 读取团队用户信息
+func (t *TeamUser) ReadTeamUser(tid, uid string) error {
+	query := bson.M{
+		"team._id": bson.ObjectIdHex(tid),
+		"user._id": bson.ObjectIdHex(uid),
+		"status":   TeamUserStatusOnline,
+	}
+	return core.Orm.One(t.GetTable(), query, t)
+}

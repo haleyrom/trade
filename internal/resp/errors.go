@@ -40,6 +40,12 @@ const (
 
 	// CodeExistTeam 团队存在
 	CodeExistTeam StatusCode = 101104
+
+	// CodeNotUser 用户不存在
+	CodeNotUser StatusCode = 101105
+
+	// CodeExistUser 用户存在
+	CodeExistUser StatusCode = 101106
 )
 
 // StatusCode 状态码
@@ -72,6 +78,8 @@ func init() {
 		CodeAuth:                "暂无权限",
 		CodeNotTeam:             "该团队不存在/已解散",
 		CodeExistTeam:           "已加入该团队,您可以直接进入",
+		CodeNotUser:             "用户不存在",
+		CodeExistUser:           "用户存在",
 	}
 }
 
