@@ -30,6 +30,7 @@ func registerSwagger(r *gin.Engine) {
 func registerRouter(r *gin.Engine) {
 	v1 := r.Group("/api")
 	{
+		// team api
 		v1.POST("/team/create", api.CreateTeam)
 		v1.POST("/team/join", api.JoinTeam)
 		v1.POST("/team/exit", api.ExitTeam)
@@ -38,8 +39,9 @@ func registerRouter(r *gin.Engine) {
 		v1.POST("/team/info", api.ReadInfoTeam)
 		v1.POST("/team/user_list", api.ReadUserListTeam)
 		v1.POST("/team/user", api.ReadTeamUser)
-
+		// project api
 		v1.POST("/project/create", api.CreateProject)
+		v1.POST("/project/join", api.JoinProject)
 	}
 
 }

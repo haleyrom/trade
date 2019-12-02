@@ -46,6 +46,12 @@ const (
 
 	// CodeExistUser 用户存在
 	CodeExistUser StatusCode = 101106
+
+	// CodeNotProject 项目不存在
+	CodeNotProject StatusCode = 101107
+
+	// CodeExistProject 项目存在
+	CodeExistProject StatusCode = 101108
 )
 
 // StatusCode 状态码
@@ -80,6 +86,8 @@ func init() {
 		CodeExistTeam:           "已加入该团队,您可以直接进入",
 		CodeNotUser:             "用户不存在",
 		CodeExistUser:           "用户存在",
+		CodeNotProject:          "该项目不存在/已解散",
+		CodeExistProject:        "已加入该项目,您可以直接进入",
 	}
 }
 

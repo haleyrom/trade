@@ -12,7 +12,7 @@ type ProjectUser struct {
 	Project    TeamProject   `json:"project" bson:"project"`         // 项目
 	User       Users         `json:"user" bson:"user"`               // 用户
 	Role       Roles         `json:"role" bson:"role"`               // 权限
-	Status     int8          `json:"status" bson:"status"`           // 状态 0：正常 1：退出
+	Status     int8          `json:"status" bson:"status"`           // 状态 0：正常 1：退出 2：解散
 	CreateTime int           `json:"create_time" bson:"create_time"` // 创建时间
 	ModifyTime int           `json:"modify_time" bson:"modify_time"` // 更新时间
 }
@@ -22,6 +22,12 @@ const (
 	ProjectUserOnline int8 = 0
 	// ProjectUserExit 退出
 	ProjectUserExit int8 = 1
+	// ProjectUserStatusOnline  项目状态正常
+	ProjectUserStatusOnline int8 = 0
+	// ProjectUserStatusExit  退出项目
+	ProjectUserStatusExit int8 = 1
+	// ProjectUserStatusDismiss 解散
+	ProjectUserStatusDismiss int8 = 2
 )
 
 // GetTable GetTable
@@ -32,6 +38,16 @@ func (p *ProjectUser) GetTable() string {
 // NewProjectUser 初始化项目用户
 func NewProjectUser() *ProjectUser {
 	return &ProjectUser{}
+}
+
+// IsExistJoinTeam 判断是否存在团队
+func (p *ProjectUser) IsExistJoinProject(pid, uid string) error {
+	query := bson.M{
+		"project._id": bson.ObjectIdHex(pid),
+		"user._id":    bson.ObjectIdHex(uid),
+		"status":      ProjectUserStatusOnline,
+	}
+	return core.Orm.One(p.GetTable(), query, p)
 }
 
 // JoinTeamProject 加入项目成员

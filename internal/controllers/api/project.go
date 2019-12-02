@@ -57,8 +57,53 @@ func CreateProject(c *gin.Context) {
 }
 
 // JoinProject 加入项目
+// @Tags 9. JoinProject
+// @Summary 加入项目接口
+// @Description 加入项目
+// @Produce json
+// @Param pid query string true "项目id"
+// @Param tid query string true "团队id"
+// @Success 200
+// @Router /api/project/join [post]
 func JoinProject(c *gin.Context) {
-	// TODO
+	p := &params.JoinProjectParam{
+		Claims: core.UserInfoPool.Get().(*params.BaseParam),
+	}
+
+	// 绑定参数
+	if err := c.ShouldBind(p); err != nil {
+		core.GResp.Failure(err)
+		return
+	}
+	// 判断是否存在团队里面
+	teamUser := models.NewTeamUser()
+	if err := teamUser.IsExistJoinTeam(p.Tid, p.Claims.ID); err != nil {
+		core.GResp.Failure(fmt.Errorf("%d", resp.CodeExistTeam))
+		return
+	}
+
+	// 判断是否存在该项目
+	project := models.NewTeamProject()
+	if err := project.IsExistTeam(p.Pid); err != nil {
+		core.GResp.Failure(fmt.Errorf("%d", resp.CodeNotProject))
+		return
+	}
+
+	if err := models.NewProjectUser().IsExistJoinProject(p.Pid, p.Claims.ID); err == nil {
+		core.GResp.Failure(fmt.Errorf("%d", resp.CodeExistProject))
+		return
+	}
+
+	projectUser := models.NewProjectUser()
+	projectUser.Project, projectUser.User = *project, models.AssignUsers(p.Claims)
+	if err := projectUser.JoinTeamProject(); err != nil {
+		core.GResp.Failure(err)
+		return
+	}
+
+	core.GResp.Success(resp.EmptyData())
+	return
+
 }
 
 // ReadListProject 项目列表
