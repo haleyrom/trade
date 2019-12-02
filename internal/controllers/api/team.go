@@ -198,6 +198,13 @@ func ReadListTeam(c *gin.Context) {
 }
 
 // ReadInfoTeam 查看团队信息
+// @Tags 6. ReadInfoTeam
+// @Summary 查看团队信息接口
+// @Description 查看团队信息
+// @Produce json
+// @Param tid query string true "团队id"
+// @Success 200
+// @Router /api/team/info [post]
 func ReadInfoTeam(c *gin.Context) {
 	p := &params.ReadInfoTeamParam{
 		Claims: core.UserInfoPool.Get().(*params.BaseParam),
@@ -222,7 +229,15 @@ func ReadInfoTeam(c *gin.Context) {
 	return
 }
 
-// ReadUserListTeam 查看团队成员信息
+// ReadUserListTeam 查看团队成员列表
+// @Tags 7. ReadUserListTeam
+// @Summary 查看团队成员列表接口
+// @Description 查看团队成员列表
+// @Produce json
+// @Param page query string true "页数默认为1"
+// @Param size query string true "页数数量默认为20"
+// @Success 200
+// @Router /api/team/user_list [post]
 func ReadUserListTeam(c *gin.Context) {
 	page, _ := strconv.Atoi(c.DefaultPostForm("page", "1"))
 	size, _ := strconv.Atoi(c.DefaultPostForm("size", "20"))

@@ -33,6 +33,37 @@
                 }
             }
         },
+        "/api/team/dismiss": {
+            "post": {
+                "description": "查看团队列表",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "5. ReadListTeam"
+                ],
+                "summary": "查看团队列表接口",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "页数默认为1",
+                        "name": "page",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "页数数量默认为20",
+                        "name": "size",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {}
+                }
+            }
+        },
         "/api/team/exit": {
             "post": {
                 "description": "退出团队",
@@ -43,6 +74,30 @@
                     "3. ExitTeam"
                 ],
                 "summary": "退出团队接口",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "团队id",
+                        "name": "tid",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {}
+                }
+            }
+        },
+        "/api/team/info": {
+            "post": {
+                "description": "查看团队信息",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "6. ReadInfoTeam"
+                ],
+                "summary": "查看团队信息接口",
                 "parameters": [
                     {
                         "type": "string",
@@ -72,6 +127,37 @@
                         "type": "string",
                         "description": "团队id",
                         "name": "tid",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {}
+                }
+            }
+        },
+        "/api/team/user_list": {
+            "post": {
+                "description": "查看团队成员列表",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "7. ReadUserListTeam"
+                ],
+                "summary": "查看团队成员列表接口",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "页数默认为1",
+                        "name": "page",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "页数数量默认为20",
+                        "name": "size",
                         "in": "query",
                         "required": true
                     }

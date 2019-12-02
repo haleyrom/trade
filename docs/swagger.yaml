@@ -22,6 +22,27 @@ paths:
       summary: 创建团队接口
       tags:
       - 1. CreateTeam
+  /api/team/dismiss:
+    post:
+      description: 查看团队列表
+      parameters:
+      - description: 页数默认为1
+        in: query
+        name: page
+        required: true
+        type: string
+      - description: 页数数量默认为20
+        in: query
+        name: size
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200": {}
+      summary: 查看团队列表接口
+      tags:
+      - 5. ReadListTeam
   /api/team/exit:
     post:
       description: 退出团队
@@ -38,6 +59,22 @@ paths:
       summary: 退出团队接口
       tags:
       - 3. ExitTeam
+  /api/team/info:
+    post:
+      description: 查看团队信息
+      parameters:
+      - description: 团队id
+        in: query
+        name: tid
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200": {}
+      summary: 查看团队信息接口
+      tags:
+      - 6. ReadInfoTeam
   /api/team/join:
     post:
       description: 加入团队
@@ -54,4 +91,25 @@ paths:
       summary: 加入团队接口
       tags:
       - 2. JoinTeam
+  /api/team/user_list:
+    post:
+      description: 查看团队成员列表
+      parameters:
+      - description: 页数默认为1
+        in: query
+        name: page
+        required: true
+        type: string
+      - description: 页数数量默认为20
+        in: query
+        name: size
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200": {}
+      summary: 查看团队成员列表接口
+      tags:
+      - 7. ReadUserListTeam
 swagger: "2.0"
