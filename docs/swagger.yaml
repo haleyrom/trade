@@ -24,25 +24,20 @@ paths:
       - 1. CreateTeam
   /api/team/dismiss:
     post:
-      description: 查看团队列表
+      description: 解散团队
       parameters:
-      - description: 页数默认为1
+      - description: 团队id
         in: query
-        name: page
-        required: true
-        type: string
-      - description: 页数数量默认为20
-        in: query
-        name: size
+        name: tid
         required: true
         type: string
       produces:
       - application/json
       responses:
         "200": {}
-      summary: 查看团队列表接口
+      summary: 解散团队接口
       tags:
-      - 5. ReadListTeam
+      - 4. DismissTeam
   /api/team/exit:
     post:
       description: 退出团队
@@ -91,6 +86,27 @@ paths:
       summary: 加入团队接口
       tags:
       - 2. JoinTeam
+  /api/team/list:
+    post:
+      description: 查看团队列表
+      parameters:
+      - description: 页数默认为1
+        in: query
+        name: page
+        required: true
+        type: string
+      - description: 页数数量默认为20
+        in: query
+        name: size
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200": {}
+      summary: 查看团队列表接口
+      tags:
+      - 5. ReadListTeam
   /api/team/user_list:
     post:
       description: 查看团队成员列表

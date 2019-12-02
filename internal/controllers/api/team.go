@@ -165,7 +165,6 @@ func DismissTeam(c *gin.Context) {
 		core.GResp.Success(resp.EmptyData())
 		return
 	}
-
 	core.GResp.Failure(fmt.Errorf("%d", resp.CodeAuth))
 	return
 }
@@ -178,7 +177,7 @@ func DismissTeam(c *gin.Context) {
 // @Param page query string true "页数默认为1"
 // @Param size query string true "页数数量默认为20"
 // @Success 200
-// @Router /api/team/dismiss [post]
+// @Router /api/team/list [post]
 func ReadListTeam(c *gin.Context) {
 	page, _ := strconv.Atoi(c.DefaultPostForm("page", "1"))
 	size, _ := strconv.Atoi(c.DefaultPostForm("size", "20"))

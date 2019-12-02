@@ -35,26 +35,19 @@
         },
         "/api/team/dismiss": {
             "post": {
-                "description": "查看团队列表",
+                "description": "解散团队",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
-                    "5. ReadListTeam"
+                    "4. DismissTeam"
                 ],
-                "summary": "查看团队列表接口",
+                "summary": "解散团队接口",
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "页数默认为1",
-                        "name": "page",
-                        "in": "query",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "页数数量默认为20",
-                        "name": "size",
+                        "description": "团队id",
+                        "name": "tid",
                         "in": "query",
                         "required": true
                     }
@@ -127,6 +120,37 @@
                         "type": "string",
                         "description": "团队id",
                         "name": "tid",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {}
+                }
+            }
+        },
+        "/api/team/list": {
+            "post": {
+                "description": "查看团队列表",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "5. ReadListTeam"
+                ],
+                "summary": "查看团队列表接口",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "页数默认为1",
+                        "name": "page",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "页数数量默认为20",
+                        "name": "size",
                         "in": "query",
                         "required": true
                     }
