@@ -31,6 +31,12 @@ const (
 
 	// CodeIllegalToken token不合法
 	CodeIllegalToken StatusCode = 1002
+
+	// CodeNotTeam 团队不存在
+	CodeNotTeam StatusCode = 1100
+
+	// CodeExistTeam 团队存在
+	CodeExistTeam StatusCode = 1101
 )
 
 // StatusCode 状态码
@@ -60,6 +66,8 @@ func init() {
 		CodeInternalServerError: "服务繁忙,请稍后！",
 		CodeNoToken:             "请求参数必需要有token",
 		CodeIllegalToken:        "token不合法",
+		CodeNotTeam:             "该团队不存在/已解散",
+		CodeExistTeam:           "已加入该团队,您可以直接进入",
 	}
 }
 

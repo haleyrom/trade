@@ -2,6 +2,7 @@ package models
 
 import (
 	"github.com/haleyrom/trade/core"
+	"github.com/haleyrom/trade/internal/params"
 	"gopkg.in/mgo.v2/bson"
 	"time"
 )
@@ -30,10 +31,25 @@ func (t *TeamUser) GetTable() string {
 	return "team_user"
 }
 
+// NewTeamUser 初始化团队成员
+func NewTeamUser() *TeamUser {
+	return &TeamUser{}
+}
+
 // JoinTeamUser 加入团队成员
 func (t *TeamUser) JoinTeamUser() error {
+	t.Id = bson.NewObjectId()
 	timer := int(time.Now().Unix())
 	t.CreateTime, t.ModifyTime = timer, timer
 	err := core.Orm.InsertAll(t.GetTable(), []interface{}{*t})
 	return err
+}
+
+// IsExistJoinTeam 判断是否存在团队
+func (t *TeamUser) IsExistJoinTeam(p *params.JoinTeamParam) error {
+	query := bson.M{
+		"team._id": bson.ObjectIdHex(p.Tid),
+		"user._id": bson.ObjectIdHex(p.Claims.ID),
+	}
+	return core.Orm.One(t.GetTable(), query, t)
 }

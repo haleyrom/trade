@@ -16,7 +16,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "1.CreateTeam"
+                    "1. CreateTeam"
                 ],
                 "summary": "创建团队接口",
                 "parameters": [
@@ -24,6 +24,30 @@
                         "type": "string",
                         "description": "团队名称",
                         "name": "name",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {}
+                }
+            }
+        },
+        "/api/team/join": {
+            "post": {
+                "description": "加入团队",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "2. JoinTeam"
+                ],
+                "summary": "加入团队接口",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "团队id",
+                        "name": "tid",
                         "in": "query",
                         "required": true
                     }

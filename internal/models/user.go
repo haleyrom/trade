@@ -1,6 +1,10 @@
 package models
 
-import "gopkg.in/mgo.v2/bson"
+import (
+	"github.com/haleyrom/trade/internal/params"
+	"gopkg.in/mgo.v2/bson"
+	"time"
+)
 
 // Users 用户
 type Users struct {
@@ -16,4 +20,18 @@ type Users struct {
 // GetTable GetTable
 func (u *Users) GetTable() string {
 	return "users"
+}
+
+// AssignUsers 赋值用户
+func AssignUsers(p *params.BaseParam) Users {
+	timer := int(time.Now().Unix())
+	return Users{
+		Uid:        bson.ObjectIdHex(p.ID),
+		Name:       p.Name,
+		Email:      "",
+		HeadImg:    "",
+		Status:     0,
+		CreateTime: timer,
+		ModifyTime: timer,
+	}
 }

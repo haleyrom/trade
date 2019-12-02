@@ -1,6 +1,7 @@
 package api
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/haleyrom/trade/core"
 	"github.com/haleyrom/trade/internal/models"
@@ -17,19 +18,18 @@ import (
 // @Success 200
 // @Router /api/team/create [post]
 func CreateTeam(c *gin.Context) {
-	param := &params.CreateTeamParam{
+	p := &params.CreateTeamParam{
 		Claims: core.UserInfoPool.Get().(*params.BaseParam),
 	}
 
 	// 绑定参数
-	if err := c.ShouldBind(param); err != nil {
+	if err := c.ShouldBind(p); err != nil {
 		core.GResp.Failure(err)
 		return
 	}
 
 	// TODO： 暂未验证权限
-	team := &models.Teams{}
-	if err := team.CreateTeam(param); err != nil {
+	if err := models.NewTeam().CreateTeam(p); err != nil {
 		core.GResp.Failure(err)
 		return
 	}
@@ -38,19 +38,52 @@ func CreateTeam(c *gin.Context) {
 }
 
 // JoinTeam 加入团队
+// @Tags 2. JoinTeam
+// @Summary 加入团队接口
+// @Description 加入团队
+// @Produce json
+// @Param tid query string true "团队id"
+// @Success 200
+// @Router /api/team/join [post]
 func JoinTeam(c *gin.Context) {
-	param := &params.JoinTeamParam{
+	p := &params.JoinTeamParam{
 		Claims: core.UserInfoPool.Get().(*params.BaseParam),
 	}
 
 	// 绑定参数
-	if err := c.ShouldBind(param); err != nil {
+	if err := c.ShouldBind(p); err != nil {
 		core.GResp.Failure(err)
 		return
 	}
 
-	// TODO
-	//team := &models.Teams{}
+	// TODO: 判断邀请码/权限判断
+
+	// 判断是否存在该团队
+	team := models.NewTeam()
+	if err := team.IsExistTeam(p); err != nil {
+		core.GResp.Failure(fmt.Errorf("%d", resp.CodeNotTeam))
+		return
+	}
+
+	// 判断是否存在团队里面
+	if err := models.NewTeamUser().IsExistJoinTeam(p); err == nil {
+		core.GResp.Failure(fmt.Errorf("%d", resp.CodeExistTeam))
+		return
+	}
+
+	teamUser := &models.TeamUser{
+		Team: *team,
+		User: models.AssignUsers(p.Claims),
+		Role: models.Roles{},
+	}
+
+	if err := teamUser.JoinTeamUser(); err != nil {
+		core.GResp.Failure(err)
+		return
+	}
+
+	core.GResp.Success(resp.EmptyData())
+	return
 
 }
 

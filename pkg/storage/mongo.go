@@ -34,10 +34,19 @@ func (m *MongoClient) Init(c config.Configure) error {
 	return nil
 }
 
+// table 表
+func (m *MongoClient) table(table string) *mgo.Collection {
+	return m.Client.DB(m.Database).C(table)
+}
+
 // InsertAll 插入
 func (m *MongoClient) InsertAll(table string, data []interface{}) error {
-	collection := m.Client.DB(m.Database).C(table)
-	return collection.Insert(data...)
+	return m.table(table).Insert(data...)
+}
+
+// One 单条查询
+func (m *MongoClient) One(table string, condition map[string]interface{}, obj interface{}) error {
+	return m.table(table).Find(condition).One(obj)
 }
 
 // Clone

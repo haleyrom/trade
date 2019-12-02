@@ -22,23 +22,21 @@ func (t *Teams) GetTable() string {
 	return "teams"
 }
 
+// NewTeam 初始化团队
+func NewTeam() *Teams {
+	return &Teams{}
+}
+
 // CreateTeams 创建团队
-func (t *Teams) CreateTeam(param *params.CreateTeamParam) error {
+func (t *Teams) CreateTeam(p *params.CreateTeamParam) error {
 	var err error
 	timer := int(time.Now().Unix())
-	t.Id, t.Name = bson.NewObjectId(), param.Name
+	t.Id, t.Name = bson.NewObjectId(), p.Name
 	t.CreateTime, t.ModifyTime = timer, timer
-
-	t.Creator = Users{
-		Uid:        bson.ObjectIdHex(param.Claims.ID),
-		Name:       param.Claims.Name,
-		CreateTime: timer,
-		ModifyTime: timer,
-	}
+	t.Creator = AssignUsers(p.Claims)
 
 	if err = core.Orm.InsertAll(t.GetTable(), []interface{}{*t}); err == nil {
 		teamUser := TeamUser{
-			Id:     bson.NewObjectId(),
 			Team:   *t,
 			User:   t.Creator,
 			Role:   Roles{},
@@ -50,8 +48,10 @@ func (t *Teams) CreateTeam(param *params.CreateTeamParam) error {
 	return err
 }
 
-// ExistTeam 判断是否存在团队
-func (t *Teams) IsExistTeam(param *params.JoinTeamParam) error {
-
-	return nil
+// IsExistTeam 判断是否存在团队
+func (t *Teams) IsExistTeam(p *params.JoinTeamParam) error {
+	query := bson.M{
+		"_id": bson.ObjectIdHex(p.Tid),
+	}
+	return core.Orm.One(t.GetTable(), query, t)
 }

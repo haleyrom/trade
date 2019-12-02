@@ -30,13 +30,12 @@ func (r *Resp) Failure(err error) {
 	if ok := errors.As(err, &code); ok {
 		data = ErrCodeMsg(code)
 	} else {
+		data = ErrCodeMsg(CodeInternalServerError)
 		if code, _ := strconv.Atoi(err.Error()); code > 0 {
 			data = ErrCodeMsg(StatusCode(code))
-		} else {
-			data = ErrCodeMsg(CodeInternalServerError)
 		}
 	}
 
-	r.JSON(http.StatusInternalServerError, data)
 	logrus.Error(err)
+	r.JSON(http.StatusInternalServerError, data)
 }
