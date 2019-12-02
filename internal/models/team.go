@@ -78,3 +78,11 @@ func (t *Teams) DismissTeam(tid string) error {
 	}
 	return err
 }
+
+// ReadTeamInfo 读取团队信息
+func (t *Teams) ReadTeamInfo(tid string) error {
+	query := bson.M{
+		"_id": bson.ObjectIdHex(tid),
+	}
+	return core.Orm.One(t.GetTable(), query, t)
+}

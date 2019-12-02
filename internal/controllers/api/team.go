@@ -7,6 +7,7 @@ import (
 	"github.com/haleyrom/trade/internal/models"
 	"github.com/haleyrom/trade/internal/params"
 	"github.com/haleyrom/trade/internal/resp"
+	"strconv"
 )
 
 // CreateTeam 创建团队
@@ -139,7 +140,7 @@ func ExitTeam(c *gin.Context) {
 // @Success 200
 // @Router /api/team/dismiss [post]
 func DismissTeam(c *gin.Context) {
-	p := &params.DismissTeam{
+	p := &params.DismissTeamParam{
 		Claims: core.UserInfoPool.Get().(*params.BaseParam),
 	}
 
@@ -170,16 +171,88 @@ func DismissTeam(c *gin.Context) {
 }
 
 // ReadListTeam 查看团队列表
+// @Tags 5. ReadListTeam
+// @Summary 查看团队列表接口
+// @Description 查看团队列表
+// @Produce json
+// @Param page query string true "页数默认为1"
+// @Param size query string true "页数数量默认为20"
+// @Success 200
+// @Router /api/team/dismiss [post]
 func ReadListTeam(c *gin.Context) {
-	// TODO
+	page, _ := strconv.Atoi(c.DefaultPostForm("page", "1"))
+	size, _ := strconv.Atoi(c.DefaultPostForm("size", "20"))
+	p := &params.ReadListTeamParam{
+		Claims: core.UserInfoPool.Get().(*params.BaseParam),
+		Page:   page,
+		Size:   size,
+	}
+
+	data, err := models.NewTeamUser().PageTeam(p.Claims.ID, (page-1)*size, size)
+	if err != nil {
+		core.GResp.Failure(err)
+		return
+	}
+	core.GResp.Success(data)
+	return
 }
 
 // ReadInfoTeam 查看团队信息
 func ReadInfoTeam(c *gin.Context) {
-	// TODO
+	p := &params.ReadInfoTeamParam{
+		Claims: core.UserInfoPool.Get().(*params.BaseParam),
+	}
+
+	// 绑定参数
+	if err := c.ShouldBind(p); err != nil {
+		core.GResp.Failure(err)
+		return
+	}
+
+	// TODO: 是否存在权限查看
+
+	// 判断是否存在该团队
+	team := models.NewTeam()
+	if err := team.ReadTeamInfo(p.Tid); err != nil {
+		core.GResp.Failure(fmt.Errorf("%d", resp.CodeNotTeam))
+		return
+	}
+
+	core.GResp.Success(team)
+	return
 }
 
 // ReadUserListTeam 查看团队成员信息
 func ReadUserListTeam(c *gin.Context) {
-	// TODO
+	page, _ := strconv.Atoi(c.DefaultPostForm("page", "1"))
+	size, _ := strconv.Atoi(c.DefaultPostForm("size", "20"))
+	p := &params.ReadUserListTeamParam{
+		Claims: core.UserInfoPool.Get().(*params.BaseParam),
+		Page:   page,
+		Size:   size,
+	}
+
+	// 绑定参数
+	if err := c.ShouldBind(p); err != nil {
+		core.GResp.Failure(err)
+		return
+	}
+
+	// TODO： 是否存在权限查看
+
+	// 判断是否存在该团队
+	team := models.NewTeam()
+	if err := team.IsExistTeam(p.Tid); err != nil {
+		core.GResp.Failure(fmt.Errorf("%d", resp.CodeNotTeam))
+		return
+	}
+
+	data, err := models.NewTeamUser().PageTeamUser(p.Tid, (page-1)*size, size)
+	if err != nil {
+		core.GResp.Failure(err)
+		return
+	}
+	core.GResp.Success(data)
+	return
+
 }

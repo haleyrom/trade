@@ -34,6 +34,9 @@ func registerRouter(r *gin.Engine) {
 		v1.POST("/team/join", api.JoinTeam)
 		v1.POST("/team/exit", api.ExitTeam)
 		v1.POST("/team/dismiss", api.DismissTeam)
+		v1.POST("/team/list", api.ReadListTeam)
+		v1.POST("/team/info", api.ReadInfoTeam)
+		v1.POST("/team/user_list", api.ReadUserListTeam)
 	}
 
 }

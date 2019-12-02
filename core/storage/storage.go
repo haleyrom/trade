@@ -8,5 +8,7 @@ type Storage interface {
 	One(table string, condition map[string]interface{}, obj interface{}) error
 	InsertAll(table string, data []interface{}) error
 	Update(table string, condition map[string]interface{}, obj interface{}) error
+	Count(table string, condition map[string]interface{}) (int, error)
+	All(table string, condition map[string]interface{})
 	Clone()
 }

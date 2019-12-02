@@ -2,6 +2,8 @@ package models
 
 import (
 	"github.com/haleyrom/trade/core"
+	"github.com/haleyrom/trade/internal/resp"
+	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 	"time"
 )
@@ -96,4 +98,94 @@ func (t *TeamUser) DismissTeam(tid string) error {
 	}
 
 	return core.Orm.Update(t.GetTable(), query, update)
+}
+
+// ReadTeamInfo 读取团对信息
+func (t *TeamUser) PageTeam(uid string, start, end int) (resp.PageResp, error) {
+	var (
+		items []TeamUser
+		err   error
+	)
+	data := resp.PageResp{
+		Items: make([]Teams, 0),
+		Page: resp.PageInfoResp{
+			PageSize: end,
+		},
+	}
+
+	query := []bson.M{
+		{"$match": bson.M{
+			"user._id": bson.ObjectIdHex(uid),
+			"status":   TeamUserStatusOnline,
+		}},
+		{"$skip": start},
+		{"$limit": end},
+	}
+	if err := core.Orm.All(t.GetTable(), query, &items); err != nil && err != mgo.ErrNotFound {
+		return data, err
+	}
+
+	for _, val := range items {
+		data.Items = append(data.Items.([]Teams), val.Team)
+	}
+
+	if data.Page.Count, err = t.CountTeam(uid); err != nil {
+		return data, err
+	}
+
+	return data, nil
+}
+
+// CountTeam 统计团队
+func (t *TeamUser) CountTeam(uid string) (int, error) {
+	query := bson.M{
+		"user._id": bson.ObjectIdHex(uid),
+		"status":   TeamUserStatusOnline,
+	}
+	return core.Orm.Count(t.GetTable(), query)
+}
+
+// PageTeamUser 读取团对信息
+func (t *TeamUser) PageTeamUser(tid string, start, end int) (resp.PageResp, error) {
+	var (
+		items []TeamUser
+		err   error
+	)
+	data := resp.PageResp{
+		Items: make([]Users, 0),
+		Page: resp.PageInfoResp{
+			PageSize: end,
+		},
+	}
+
+	query := []bson.M{
+		{"$match": bson.M{
+			"team._id": bson.ObjectIdHex(tid),
+			"status":   TeamUserStatusOnline,
+		}},
+		{"$skip": start},
+		{"$limit": end},
+	}
+	if err := core.Orm.All(t.GetTable(), query, &items); err != nil && err != mgo.ErrNotFound {
+		return data, err
+	}
+
+	for _, val := range items {
+		data.Items = append(data.Items.([]Users), val.User)
+	}
+
+	if data.Page.Count, err = t.CountTeamUser(tid); err != nil {
+		return data, err
+	}
+
+	return data, nil
+}
+
+// CountTeamUser 统计团队用户
+func (t *TeamUser) CountTeamUser(tid string) (int, error) {
+	query := bson.M{
+		"team._id": bson.ObjectIdHex(tid),
+		"status":   TeamUserStatusOnline,
+	}
+	return core.Orm.Count(t.GetTable(), query)
 }

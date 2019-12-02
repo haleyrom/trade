@@ -54,6 +54,16 @@ func (m *MongoClient) Update(table string, condition map[string]interface{}, obj
 	return m.table(table).Update(condition, obj)
 }
 
+// Count 统计
+func (m *MongoClient) Count(table string, condition map[string]interface{}) (int, error) {
+	return m.table(table).Find(condition).Count()
+}
+
+// All 查询全部
+func (m *MongoClient) All(table string, condition interface{}, obj interface{}) error {
+	return m.table(table).Pipe(condition).All(obj)
+}
+
 // Clone
 func (m *MongoClient) Clone() {
 	m.Client.Clone()
