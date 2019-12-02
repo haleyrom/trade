@@ -10,6 +10,50 @@ import (
 	"strconv"
 )
 
+// ExitTeam 退出团队
+// @Tags 3. ExitTeam
+// @Summary 退出团队接口
+// @Description 退出团队
+// @Produce json
+// @Param tid query string true "团队id"
+// @Success 200
+// @Router /api/team/exit [post]
+func ExitTeam(c *gin.Context) {
+	p := &params.ExitTeamParam{
+		Claims: core.UserInfoPool.Get().(*params.BaseParam),
+	}
+
+	// 绑定参数
+	if err := c.ShouldBind(p); err != nil {
+		core.GResp.Failure(err)
+		return
+	}
+
+	// TODO: 权限
+
+	// 判断是否存在该团队
+	teamUser := models.NewTeamUser()
+	if err := teamUser.IsExistJoinTeam(p.Tid, p.Claims.ID); err != nil {
+		core.GResp.Failure(fmt.Errorf("%d", resp.CodeNotTeam))
+		return
+	}
+
+	// 团队队长不能退团
+	if teamUser.Type == models.TeamUserTypeOwner {
+		core.GResp.Failure(fmt.Errorf("%d", resp.CodeAuth))
+		return
+	}
+
+	if teamUser.Status == models.TeamUserStatusOnline {
+		if err := teamUser.ExitTeam(p.Tid, p.Claims.ID); err != nil {
+			core.GResp.Failure(err)
+			return
+		}
+	}
+	core.GResp.Success(resp.EmptyData())
+	return
+}
+
 // ReadUserListTeam 查看团队成员列表
 // @Tags 7. ReadUserListTeam
 // @Summary 查看团队成员列表接口

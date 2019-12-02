@@ -38,6 +38,8 @@ func registerRouter(r *gin.Engine) {
 		v1.POST("/team/info", api.ReadInfoTeam)
 		v1.POST("/team/user_list", api.ReadUserListTeam)
 		v1.POST("/team/user", api.ReadTeamUser)
+
+		v1.POST("/project/create", api.CreateProject)
 	}
 
 }

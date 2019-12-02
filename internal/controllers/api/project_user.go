@@ -11,3 +11,8 @@ func ReadProjectUser(c *gin.Context) {
 func ReadListProjectUser(c *gin.Context) {
 	// TODO
 }
+
+// ExitProject 退出项目
+func ExitProject(c *gin.Context) {
+	// TODO
+}

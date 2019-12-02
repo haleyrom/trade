@@ -65,6 +65,7 @@ func (t *TeamUser) IsExistJoinTeam(tid, uid string) error {
 	query := bson.M{
 		"team._id": bson.ObjectIdHex(tid),
 		"user._id": bson.ObjectIdHex(uid),
+		"status":   TeamUserStatusOnline,
 	}
 	return core.Orm.One(t.GetTable(), query, t)
 }
@@ -81,6 +82,7 @@ func (t *TeamUser) ExitTeam(tid, uid string) error {
 	query := bson.M{
 		"team._id": bson.ObjectIdHex(tid),
 		"user._id": bson.ObjectIdHex(uid),
+		"status":   TeamUserStatusOnline,
 	}
 	return core.Orm.Update(t.GetTable(), query, update)
 }
