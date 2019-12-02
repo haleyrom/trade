@@ -60,23 +60,22 @@ func JoinTeam(c *gin.Context) {
 
 	// 判断是否存在该团队
 	team := models.NewTeam()
-	if err := team.IsExistTeam(p); err != nil {
+	if err := team.IsExistTeam(p.Tid); err != nil {
 		core.GResp.Failure(fmt.Errorf("%d", resp.CodeNotTeam))
 		return
 	}
 
 	// 判断是否存在团队里面
-	if err := models.NewTeamUser().IsExistJoinTeam(p); err == nil {
-		core.GResp.Failure(fmt.Errorf("%d", resp.CodeExistTeam))
-		return
+	teamUser := models.NewTeamUser()
+	if err := teamUser.IsExistJoinTeam(p.Tid, p.Claims.ID); err == nil {
+		// 是否退出
+		if teamUser.Status == models.TeamUserStatusOnline {
+			core.GResp.Failure(fmt.Errorf("%d", resp.CodeExistTeam))
+			return
+		}
 	}
 
-	teamUser := &models.TeamUser{
-		Team: *team,
-		User: models.AssignUsers(p.Claims),
-		Role: models.Roles{},
-	}
-
+	teamUser.Team, teamUser.User = *team, models.AssignUsers(p.Claims)
 	if err := teamUser.JoinTeamUser(); err != nil {
 		core.GResp.Failure(err)
 		return
@@ -89,7 +88,34 @@ func JoinTeam(c *gin.Context) {
 
 // ExitTeam 退出团队
 func ExitTeam(c *gin.Context) {
-	// TODO
+	p := &params.ExitTeamParam{
+		Claims: core.UserInfoPool.Get().(*params.BaseParam),
+	}
+
+	// 绑定参数
+	if err := c.ShouldBind(p); err != nil {
+		core.GResp.Failure(err)
+		return
+	}
+
+	// TODO: 权限
+
+	// 判断是否存在该团队
+	teamUser := models.NewTeamUser()
+	if err := teamUser.IsExistJoinTeam(p.Tid, p.Claims.ID); err != nil {
+		core.GResp.Failure(fmt.Errorf("%d", resp.CodeNotTeam))
+		return
+	}
+
+	if teamUser.Status == models.TeamUserStatusOnline {
+		if err := teamUser.ExitTeam(p); err != nil {
+			core.GResp.Failure(err)
+			return
+		}
+	}
+	core.GResp.Success(resp.EmptyData())
+	return
+
 }
 
 // ReadListTeam 查看团队列表

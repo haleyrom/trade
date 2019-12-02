@@ -23,20 +23,23 @@ const (
 	// CodeOk 请求响应
 	CodeOk StatusCode = http.StatusOK
 
+	// CodeAuth 暂无权限
+	CodeAuth StatusCode = http.StatusUnauthorized
+
 	// CodeInternalServerError 内部服务出错
 	CodeInternalServerError StatusCode = http.StatusInternalServerError
 
 	// CodeNoToken 请求参数必需要有token
-	CodeNoToken StatusCode = 1001
+	CodeNoToken StatusCode = 101101
 
 	// CodeIllegalToken token不合法
-	CodeIllegalToken StatusCode = 1002
+	CodeIllegalToken StatusCode = 101102
 
 	// CodeNotTeam 团队不存在
-	CodeNotTeam StatusCode = 1100
+	CodeNotTeam StatusCode = 101110
 
 	// CodeExistTeam 团队存在
-	CodeExistTeam StatusCode = 1101
+	CodeExistTeam StatusCode = 101101
 )
 
 // StatusCode 状态码
@@ -66,6 +69,7 @@ func init() {
 		CodeInternalServerError: "服务繁忙,请稍后！",
 		CodeNoToken:             "请求参数必需要有token",
 		CodeIllegalToken:        "token不合法",
+		CodeAuth:                "暂无权限",
 		CodeNotTeam:             "该团队不存在/已解散",
 		CodeExistTeam:           "已加入该团队,您可以直接进入",
 	}

@@ -49,6 +49,11 @@ func (m *MongoClient) One(table string, condition map[string]interface{}, obj in
 	return m.table(table).Find(condition).One(obj)
 }
 
+// Update 更新
+func (m *MongoClient) Update(table string, condition map[string]interface{}, obj interface{}) error {
+	return m.table(table).Update(condition, obj)
+}
+
 // Clone
 func (m *MongoClient) Clone() {
 	m.Client.Clone()

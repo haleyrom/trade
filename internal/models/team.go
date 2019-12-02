@@ -49,9 +49,9 @@ func (t *Teams) CreateTeam(p *params.CreateTeamParam) error {
 }
 
 // IsExistTeam 判断是否存在团队
-func (t *Teams) IsExistTeam(p *params.JoinTeamParam) error {
+func (t *Teams) IsExistTeam(tid string) error {
 	query := bson.M{
-		"_id": bson.ObjectIdHex(p.Tid),
+		"_id": bson.ObjectIdHex(tid),
 	}
 	return core.Orm.One(t.GetTable(), query, t)
 }

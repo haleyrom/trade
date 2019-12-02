@@ -21,9 +21,14 @@ type TeamUser struct {
 
 const (
 	// teamUserTypePublic 普通用户
-	TeamUserPublic int8 = 0 + iota
+	TeamUserPublic int8 = 0
 	// TeamUserTypeOwner 创建用户
-	TeamUserTypeOwner
+	TeamUserTypeOwner int8 = 1
+
+	// TeamUserStatusOnline 团队用户正常
+	TeamUserStatusOnline int8 = 0
+	// TeamUserStatusExit 退出
+	TeamUserStatusExit int8 = 1
 )
 
 // GetTable GetTable
@@ -38,18 +43,41 @@ func NewTeamUser() *TeamUser {
 
 // JoinTeamUser 加入团队成员
 func (t *TeamUser) JoinTeamUser() error {
-	t.Id = bson.NewObjectId()
+	var err error
 	timer := int(time.Now().Unix())
-	t.CreateTime, t.ModifyTime = timer, timer
-	err := core.Orm.InsertAll(t.GetTable(), []interface{}{*t})
+	t.Status, t.ModifyTime = TeamUserStatusOnline, timer
+
+	if len(t.Id) == core.DefaultNilNum {
+		t.Id, t.CreateTime = bson.NewObjectId(), timer
+		err = core.Orm.InsertAll(t.GetTable(), []interface{}{*t})
+	} else {
+		query := bson.M{"_id": t.Id}
+		err = core.Orm.Update(t.GetTable(), query, t)
+	}
 	return err
 }
 
 // IsExistJoinTeam 判断是否存在团队
-func (t *TeamUser) IsExistJoinTeam(p *params.JoinTeamParam) error {
+func (t *TeamUser) IsExistJoinTeam(tid, uid string) error {
+	query := bson.M{
+		"team._id": bson.ObjectIdHex(tid),
+		"user._id": bson.ObjectIdHex(uid),
+	}
+	return core.Orm.One(t.GetTable(), query, t)
+}
+
+// ExitTeam 退出团队
+func (t *TeamUser) ExitTeam(p *params.ExitTeamParam) error {
+	update := bson.M{
+		"$set": bson.M{
+			"status":      TeamUserStatusExit,
+			"modify_time": int(time.Now().Unix()),
+		},
+	}
+
 	query := bson.M{
 		"team._id": bson.ObjectIdHex(p.Tid),
 		"user._id": bson.ObjectIdHex(p.Claims.ID),
 	}
-	return core.Orm.One(t.GetTable(), query, t)
+	return core.Orm.Update(t.GetTable(), query, update)
 }
