@@ -2,7 +2,6 @@ package models
 
 import (
 	"github.com/haleyrom/trade/core"
-	"github.com/haleyrom/trade/internal/params"
 	"gopkg.in/mgo.v2/bson"
 	"time"
 )
@@ -14,7 +13,7 @@ type TeamUser struct {
 	User       Users         `json:"user" bson:"user"`               // 用户
 	Role       Roles         `json:"role" bson:"role"`               // 身份
 	Type       int8          `json:"type" bson:"type"`               // 类型 0：正常 1：队长
-	Status     int8          `json:"status" bson:"status"`           // 状态 0：正常 1：退出
+	Status     int8          `json:"status" bson:"status"`           // 状态 0：正常 1：退出 2:解散
 	CreateTime int           `json:"create_time" bson:"create_time"` // 创建时间
 	ModifyTime int           `json:"modify_time" bson:"modify_time"` // 更新时间
 }
@@ -29,6 +28,8 @@ const (
 	TeamUserStatusOnline int8 = 0
 	// TeamUserStatusExit 退出
 	TeamUserStatusExit int8 = 1
+	// TeamUserStatusDismiss 解散
+	TeamUserStatusDismiss int8 = 2
 )
 
 // GetTable GetTable
@@ -67,7 +68,7 @@ func (t *TeamUser) IsExistJoinTeam(tid, uid string) error {
 }
 
 // ExitTeam 退出团队
-func (t *TeamUser) ExitTeam(p *params.ExitTeamParam) error {
+func (t *TeamUser) ExitTeam(tid, uid string) error {
 	update := bson.M{
 		"$set": bson.M{
 			"status":      TeamUserStatusExit,
@@ -76,8 +77,23 @@ func (t *TeamUser) ExitTeam(p *params.ExitTeamParam) error {
 	}
 
 	query := bson.M{
-		"team._id": bson.ObjectIdHex(p.Tid),
-		"user._id": bson.ObjectIdHex(p.Claims.ID),
+		"team._id": bson.ObjectIdHex(tid),
+		"user._id": bson.ObjectIdHex(uid),
 	}
+	return core.Orm.Update(t.GetTable(), query, update)
+}
+
+// DismissTeam 解散团队
+func (t *TeamUser) DismissTeam(tid string) error {
+	update := bson.M{
+		"$set": bson.M{
+			"status":      TeamUserStatusDismiss,
+			"modify_time": int(time.Now().Unix()),
+		},
+	}
+	query := bson.M{
+		"team._id": bson.ObjectIdHex(tid),
+	}
+
 	return core.Orm.Update(t.GetTable(), query, update)
 }

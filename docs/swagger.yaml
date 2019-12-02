@@ -22,6 +22,22 @@ paths:
       summary: 创建团队接口
       tags:
       - 1. CreateTeam
+  /api/team/exit:
+    post:
+      description: 退出团队
+      parameters:
+      - description: 团队id
+        in: query
+        name: tid
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200": {}
+      summary: 退出团队接口
+      tags:
+      - 3. ExitTeam
   /api/team/join:
     post:
       description: 加入团队

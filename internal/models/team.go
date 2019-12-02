@@ -17,6 +17,11 @@ type Teams struct {
 	ModifyTime int           `json:"modify_time" bson:"modify_time"` // 更新时间
 }
 
+const (
+	// TeamStatusDismiss 团队解散
+	TeamStatusDismiss int8 = 1
+)
+
 // GetTable GetTable
 func (t *Teams) GetTable() string {
 	return "teams"
@@ -54,4 +59,22 @@ func (t *Teams) IsExistTeam(tid string) error {
 		"_id": bson.ObjectIdHex(tid),
 	}
 	return core.Orm.One(t.GetTable(), query, t)
+}
+
+// DismissTeam 解散团队
+func (t *Teams) DismissTeam(tid string) error {
+	var err error
+	update := bson.M{
+		"$set": bson.M{
+			"status":      TeamStatusDismiss,
+			"modify_time": int(time.Now().Unix()),
+		},
+	}
+	query := bson.M{
+		"_id": bson.ObjectIdHex(tid),
+	}
+	if err = core.Orm.Update(t.GetTable(), query, update); err == nil {
+		err = NewTeamUser().DismissTeam(tid)
+	}
+	return err
 }

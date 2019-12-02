@@ -36,10 +36,10 @@ const (
 	CodeIllegalToken StatusCode = 101102
 
 	// CodeNotTeam 团队不存在
-	CodeNotTeam StatusCode = 101110
+	CodeNotTeam StatusCode = 101103
 
 	// CodeExistTeam 团队存在
-	CodeExistTeam StatusCode = 101101
+	CodeExistTeam StatusCode = 101104
 )
 
 // StatusCode 状态码
