@@ -42,6 +42,8 @@ func registerRouter(r *gin.Engine) {
 		// project api
 		v1.POST("/project/create", api.CreateProject)
 		v1.POST("/project/join", api.JoinProject)
+		v1.POST("/project/list", api.ReadListProject)
+		v1.POST("/project/dismiss", api.DismissProject)
 	}
 
 }

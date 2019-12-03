@@ -13,7 +13,7 @@ type TeamProject struct {
 	Name       string        `json:"name"  bson:"name"`               // 项目名称
 	Team       Teams         `json:"team"  bson:"team"`               // 团队
 	Service    Service       `json:"service"  bson:"service"`         // 服务
-	Status     int8          `json:"status"  bson:"status"`           // 状态 0：正常 1：关闭 2 : 删除
+	Status     int8          `json:"status"  bson:"status"`           // 状态 0：正常 1：关闭 2 : 解散
 	CreateTime int           `json:"create_time"  bson:"create_time"` // 创建时间
 	ModifyTime int           `json:"modify_time"  bson:"modify_time"` // 更新时间
 }
@@ -23,7 +23,7 @@ const (
 	TeamProjectStatusPublic int8 = 0
 	// TeamProjectStatusClose 团队项目关闭状态
 	TeamProjectStatusClose int8 = 1
-	// TeamProjectStatusRm 团队项目删除
+	// TeamProjectStatusRm 团队项目解散
 	TeamProjectStatusRm int8 = 2
 )
 
@@ -59,6 +59,32 @@ func (t *TeamProject) IsExistTeam(pid string) error {
 	query := bson.M{
 		"_id":    bson.ObjectIdHex(pid),
 		"status": TeamProjectStatusPublic,
+	}
+	return core.Orm.One(t.GetTable(), query, t)
+}
+
+// DismissTeam 解散团队
+func (t *TeamProject) DismissProject(pid string) error {
+	var err error
+	update := bson.M{
+		"$set": bson.M{
+			"status":      ProjectUserStatusDismiss,
+			"modify_time": int(time.Now().Unix()),
+		},
+	}
+	query := bson.M{
+		"_id": bson.ObjectIdHex(pid),
+	}
+	if err = core.Orm.Update(t.GetTable(), query, update); err == nil {
+		err = NewProjectUser().DismissProject(pid)
+	}
+	return err
+}
+
+// ReadTeamInfo 读取团队信息
+func (t *TeamProject) ReadProjectInfo(tid string) error {
+	query := bson.M{
+		"_id": bson.ObjectIdHex(tid),
 	}
 	return core.Orm.One(t.GetTable(), query, t)
 }

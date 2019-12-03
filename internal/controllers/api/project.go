@@ -7,6 +7,7 @@ import (
 	"github.com/haleyrom/trade/internal/models"
 	"github.com/haleyrom/trade/internal/params"
 	"github.com/haleyrom/trade/internal/resp"
+	"strconv"
 )
 
 // CreateProject 创建项目
@@ -103,20 +104,66 @@ func JoinProject(c *gin.Context) {
 
 	core.GResp.Success(resp.EmptyData())
 	return
-
 }
 
 // ReadListProject 项目列表
+// @Tags 10. ReadListProject
+// @Summary 项目列表接口
+// @Description 项目列表
+// @Produce json
+// @Param pid query string true "项目id"
+// @Param tid query string true "团队id"
+// @Success 200
+// @Router /api/project/list [post]
 func ReadListProject(c *gin.Context) {
-	// TODO
-}
+	page, _ := strconv.Atoi(c.DefaultPostForm("page", "1"))
+	size, _ := strconv.Atoi(c.DefaultPostForm("size", "20"))
+	p := &params.ReadListProjectParam{
+		Claims: core.UserInfoPool.Get().(*params.BaseParam),
+		Page:   page,
+		Size:   size,
+	}
 
-// ReadListTeamProject 读取团队项目列表
-func ReadListTeamProject(c *gin.Context) {
-	// TODO
+	data, err := models.NewProjectUser().PageProject(p.Claims.ID, (page-1)*size, size)
+	if err != nil {
+		core.GResp.Failure(err)
+		return
+	}
+	core.GResp.Success(data)
+	return
 }
 
 // DismissProject 解散项目
+// @Tags 11. DismissProject
+// @Summary 解散项目接口
+// @Description 解散项目
+// @Produce json
+// @Param pid query string true "项目id"
+// @Param tid query string true "团队id"
+// @Success 200
+// @Router /api/project/dismiss [post]
 func DismissProject(c *gin.Context) {
-	// TODO
+	p := &params.DismissProjectParam{
+		Claims: core.UserInfoPool.Get().(*params.BaseParam),
+	}
+
+	// 绑定参数
+	if err := c.ShouldBind(p); err != nil {
+		core.GResp.Failure(err)
+		return
+	}
+
+	projectUser := models.NewProjectUser()
+	if err := projectUser.IsExistJoinProject(p.Pid, p.Claims.ID); err != nil {
+		core.GResp.Failure(fmt.Errorf("%d", resp.CodeNotProject))
+		return
+	}
+
+	// TODO: 是否权限
+	if err := models.NewTeamProject().DismissProject(p.Pid); err != nil {
+		core.GResp.Failure(err)
+		return
+	}
+	core.GResp.Success(resp.EmptyData())
+	return
 }

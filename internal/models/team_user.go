@@ -97,6 +97,7 @@ func (t *TeamUser) DismissTeam(tid string) error {
 	}
 	query := bson.M{
 		"team._id": bson.ObjectIdHex(tid),
+		"status":   TeamUserStatusOnline,
 	}
 
 	return core.Orm.Update(t.GetTable(), query, update)

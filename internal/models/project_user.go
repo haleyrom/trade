@@ -2,6 +2,8 @@ package models
 
 import (
 	"github.com/haleyrom/trade/core"
+	"github.com/haleyrom/trade/internal/resp"
+	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 	"time"
 )
@@ -64,4 +66,65 @@ func (p *ProjectUser) JoinTeamProject() error {
 		err = core.Orm.Update(p.GetTable(), query, p)
 	}
 	return err
+}
+
+// PageProject 读取项目信息
+func (p *ProjectUser) PageProject(uid string, start, end int) (resp.PageResp, error) {
+	var (
+		items []TeamProject
+		err   error
+	)
+	data := resp.PageResp{
+		Items: make([]Teams, 0),
+		Page: resp.PageInfoResp{
+			PageSize: end,
+		},
+	}
+
+	query := []bson.M{
+		{"$match": bson.M{
+			"user._id": bson.ObjectIdHex(uid),
+			"status":   ProjectUserOnline,
+		}},
+		{"$skip": start},
+		{"$limit": end},
+	}
+	if err := core.Orm.All(p.GetTable(), query, &items); err != nil && err != mgo.ErrNotFound {
+		return data, err
+	}
+
+	for _, val := range items {
+		data.Items = append(data.Items.([]Teams), val.Team)
+	}
+
+	if data.Page.Count, err = p.CountProject(uid); err != nil {
+		return data, err
+	}
+
+	return data, nil
+}
+
+// CountProject 统计项目
+func (p *ProjectUser) CountProject(uid string) (int, error) {
+	query := bson.M{
+		"user._id": bson.ObjectIdHex(uid),
+		"status":   ProjectUserOnline,
+	}
+	return core.Orm.Count(p.GetTable(), query)
+}
+
+// DismissProject 解散项目
+func (p *ProjectUser) DismissProject(pid string) error {
+	update := bson.M{
+		"$set": bson.M{
+			"status":      ProjectUserStatusDismiss,
+			"modify_time": int(time.Now().Unix()),
+		},
+	}
+	query := bson.M{
+		"project._id": bson.ObjectIdHex(pid),
+		"status":      ProjectUserStatusOnline,
+	}
+
+	return core.Orm.Update(p.GetTable(), query, update)
 }
