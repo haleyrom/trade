@@ -3,8 +3,8 @@
 *.exe
 *.exe~
 *.pprof
+*.log
 .DS_Store
 .idea/
 /cache/*
-/logs
 

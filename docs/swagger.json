@@ -1,0 +1,412 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "测试",
+        "title": "测试",
+        "contact": {},
+        "license": {},
+        "version": "0.0.1"
+    },
+    "basePath": "/api/v1",
+    "paths": {
+        "/api/project/create": {
+            "post": {
+                "description": "创建项目列表",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "8. CreateProject"
+                ],
+                "summary": "创建项目接口",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "项目名称",
+                        "name": "name",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "团队id",
+                        "name": "tid",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {}
+                }
+            }
+        },
+        "/api/project/dismiss": {
+            "post": {
+                "description": "解散项目",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "11. DismissProject"
+                ],
+                "summary": "解散项目接口",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "项目id",
+                        "name": "pid",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "团队id",
+                        "name": "tid",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {}
+                }
+            }
+        },
+        "/api/project/exit": {
+            "post": {
+                "description": "退出项目列表",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "14. ExitProject"
+                ],
+                "summary": "退出项目接口",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "项目id",
+                        "name": "pid",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {}
+                }
+            }
+        },
+        "/api/project/join": {
+            "post": {
+                "description": "加入项目",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "9. JoinProject"
+                ],
+                "summary": "加入项目接口",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "项目id",
+                        "name": "pid",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "团队id",
+                        "name": "tid",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {}
+                }
+            }
+        },
+        "/api/project/list": {
+            "post": {
+                "description": "项目列表",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "10. ReadListProject"
+                ],
+                "summary": "项目列表接口",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "页数默认为1",
+                        "name": "page",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "页数数量默认为20",
+                        "name": "size",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {}
+                }
+            }
+        },
+        "/api/project/user": {
+            "post": {
+                "description": "读取项目用户列表",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "13. ReadListProjectUser"
+                ],
+                "summary": "读取项目用户列表接口",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "项目id",
+                        "name": "pid",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "页数默认为1",
+                        "name": "page",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "页数数量默认为20",
+                        "name": "size",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {}
+                }
+            }
+        },
+        "/api/team/create": {
+            "post": {
+                "description": "创建团队",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "1. CreateTeam"
+                ],
+                "summary": "创建团队接口",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "团队名称",
+                        "name": "name",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {}
+                }
+            }
+        },
+        "/api/team/dismiss": {
+            "post": {
+                "description": "解散团队",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "4. DismissTeam"
+                ],
+                "summary": "解散团队接口",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "团队id",
+                        "name": "tid",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {}
+                }
+            }
+        },
+        "/api/team/exit": {
+            "post": {
+                "description": "退出团队",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "3. ExitTeam"
+                ],
+                "summary": "退出团队接口",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "团队id",
+                        "name": "tid",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {}
+                }
+            }
+        },
+        "/api/team/info": {
+            "post": {
+                "description": "查看团队信息",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "6. ReadInfoTeam"
+                ],
+                "summary": "查看团队信息接口",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "团队id",
+                        "name": "tid",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {}
+                }
+            }
+        },
+        "/api/team/join": {
+            "post": {
+                "description": "加入团队",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "2. JoinTeam"
+                ],
+                "summary": "加入团队接口",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "团队id",
+                        "name": "tid",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {}
+                }
+            }
+        },
+        "/api/team/list": {
+            "post": {
+                "description": "查看团队列表",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "5. ReadListTeam"
+                ],
+                "summary": "查看团队列表接口",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "页数默认为1",
+                        "name": "page",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "页数数量默认为20",
+                        "name": "size",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {}
+                }
+            }
+        },
+        "/api/team/user": {
+            "post": {
+                "description": "读取团队用户",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "8. ReadTeamUser"
+                ],
+                "summary": "读取团队用户接口",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "用户id",
+                        "name": "uid",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "团队id",
+                        "name": "tid",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {}
+                }
+            }
+        },
+        "/api/team/user_list": {
+            "post": {
+                "description": "查看团队成员列表",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "7. ReadUserListTeam"
+                ],
+                "summary": "查看团队成员列表接口",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "页数默认为1",
+                        "name": "page",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "页数数量默认为20",
+                        "name": "size",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {}
+                }
+            }
+        }
+    }
+}

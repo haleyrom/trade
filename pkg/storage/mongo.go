@@ -1,33 +1,71 @@
 package storage
 
 import (
-	"context"
-	"fmt"
+	"github.com/haleyrom/trade/pkg/config"
 	"github.com/sirupsen/logrus"
-	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
+	"gopkg.in/mgo.v2"
 )
 
 // MongoClient mongo数据库
 type MongoClient struct {
-	Client *mongo.Client
+	Client   *mgo.Session
+	Database string `json:"database"`
 }
 
 // Init Init
-func (m *MongoClient) Init(addr string) error {
+func (m *MongoClient) Init(c config.Configure) error {
 	var err error
-	opt := options.Client().ApplyURI(m.parseMongodb(addr)) // mongo client
-	opt.SetMaxPoolSize(200)                                // 使用最大的连接数
-	//opt.SetLocalThreshold(3 * time.Second)                 // 只使用与mongo操作耗时小于3秒的
-	//opt.SetMaxConnIdleTime(5 * time.Second)                // 指定连接可以保持空闲的最大毫秒数
-	if m.Client, err = mongo.Connect(context.TODO(), opt); err != nil {
+	conf := &mgo.DialInfo{
+		Addrs:     []string{c.Mongo.Addr},
+		Username:  c.Mongo.Username,
+		Password:  c.Mongo.Password,
+		PoolLimit: c.Mongo.PoolLimit,
+	}
+	// 连接服务器
+	if m.Client, err = mgo.DialWithInfo(conf); err != nil {
 		logrus.Errorf("mongo client link failure : %s", err)
 		return err
 	}
+
+	m.Client.SetMode(mgo.Monotonic, true)
+	m.Database = c.Mongo.Database
+	// default is 4096
+	logrus.Infof("Connected MongoDB!")
 	return nil
 }
 
-// ParseMongodb 解析mongodb配置
-func (m *MongoClient) parseMongodb(addr string) string {
-	return fmt.Sprintf("mongodb://%s", addr)
+// table 表
+func (m *MongoClient) table(table string) *mgo.Collection {
+	return m.Client.DB(m.Database).C(table)
+}
+
+// InsertAll 插入
+func (m *MongoClient) InsertAll(table string, data []interface{}) error {
+	return m.table(table).Insert(data...)
+}
+
+// One 单条查询
+func (m *MongoClient) One(table string, condition map[string]interface{}, obj interface{}) error {
+	return m.table(table).Find(condition).One(obj)
+}
+
+// Update 更新
+func (m *MongoClient) Update(table string, condition map[string]interface{}, obj interface{}) error {
+	return m.table(table).Update(condition, obj)
+}
+
+// Count 统计
+func (m *MongoClient) Count(table string, condition map[string]interface{}) (int, error) {
+	return m.table(table).Find(condition).Count()
+}
+
+// All 查询全部
+func (m *MongoClient) All(table string, condition interface{}, obj interface{}) error {
+	return m.table(table).Pipe(condition).All(obj)
+}
+
+// Clone
+func (m *MongoClient) Clone() {
+	m.Client.Clone()
+	return
 }
