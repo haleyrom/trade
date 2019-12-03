@@ -113,6 +113,51 @@ func (p *ProjectUser) CountProject(uid string) (int, error) {
 	return core.Orm.Count(p.GetTable(), query)
 }
 
+// PageProjectUser 读取项目信息
+func (p *ProjectUser) PageProjectUser(pid string, start, end int) (resp.PageResp, error) {
+	var (
+		items []ProjectUser
+		err   error
+	)
+	data := resp.PageResp{
+		Items: make([]Users, 0),
+		Page: resp.PageInfoResp{
+			PageSize: end,
+		},
+	}
+
+	query := []bson.M{
+		{"$match": bson.M{
+			"project._id": bson.ObjectIdHex(pid),
+			"status":      ProjectUserOnline,
+		}},
+		{"$skip": start},
+		{"$limit": end},
+	}
+	if err := core.Orm.All(p.GetTable(), query, &items); err != nil && err != mgo.ErrNotFound {
+		return data, err
+	}
+
+	for _, val := range items {
+		data.Items = append(data.Items.([]Users), val.User)
+	}
+
+	if data.Page.Count, err = p.CountProjectUser(pid); err != nil {
+		return data, err
+	}
+
+	return data, nil
+}
+
+// CountProjectUser 统计项目用户
+func (p *ProjectUser) CountProjectUser(tid string) (int, error) {
+	query := bson.M{
+		"project._id": bson.ObjectIdHex(tid),
+		"status":      ProjectUserOnline,
+	}
+	return core.Orm.Count(p.GetTable(), query)
+}
+
 // DismissProject 解散项目
 func (p *ProjectUser) DismissProject(pid string) error {
 	update := bson.M{
@@ -126,5 +171,32 @@ func (p *ProjectUser) DismissProject(pid string) error {
 		"status":      ProjectUserStatusOnline,
 	}
 
+	return core.Orm.Update(p.GetTable(), query, update)
+}
+
+// ReadProjectUser 读取项目用户信息
+func (p *ProjectUser) ReadProjectUser(pid, uid string) error {
+	query := bson.M{
+		"project._id": bson.ObjectIdHex(pid),
+		"user._id":    bson.ObjectIdHex(uid),
+		"status":      TeamUserStatusOnline,
+	}
+	return core.Orm.One(p.GetTable(), query, p)
+}
+
+// ExitProject 退出项目
+func (p *ProjectUser) ExitProject(pid, uid string) error {
+	update := bson.M{
+		"$set": bson.M{
+			"status":      ProjectUserStatusDismiss,
+			"modify_time": int(time.Now().Unix()),
+		},
+	}
+
+	query := bson.M{
+		"project._id": bson.ObjectIdHex(pid),
+		"user._id":    bson.ObjectIdHex(uid),
+		"status":      ProjectUserOnline,
+	}
 	return core.Orm.Update(p.GetTable(), query, update)
 }

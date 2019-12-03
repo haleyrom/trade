@@ -85,7 +85,7 @@ func JoinProject(c *gin.Context) {
 
 	// 判断是否存在该项目
 	project := models.NewTeamProject()
-	if err := project.IsExistTeam(p.Pid); err != nil {
+	if err := project.IsExistProject(p.Pid); err != nil {
 		core.GResp.Failure(fmt.Errorf("%d", resp.CodeNotProject))
 		return
 	}
@@ -111,8 +111,8 @@ func JoinProject(c *gin.Context) {
 // @Summary 项目列表接口
 // @Description 项目列表
 // @Produce json
-// @Param pid query string true "项目id"
-// @Param tid query string true "团队id"
+// @Param page query string true "页数默认为1"
+// @Param size query string true "页数数量默认为20"
 // @Success 200
 // @Router /api/project/list [post]
 func ReadListProject(c *gin.Context) {

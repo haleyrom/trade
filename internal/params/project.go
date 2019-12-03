@@ -30,6 +30,27 @@ type ReadListTeamProjectParam struct {
 	Tid    string     `json:"tid" form:"tid" binding:"required"`
 }
 
+// ReadProjectUserParam  读取项目用户参数
+type ReadProjectUserParam struct {
+	Claims *BaseParam `json:"claims" form:"claims"`
+	Uid    string     `json:"uid" form:"uid" binding:"required"`
+	Pid    string     `json:"pid" form:"pid" binding:"required"`
+}
+
+// ReadListProjectUserParam 读取项目用户列表参数
+type ReadListProjectUserParam struct {
+	Claims *BaseParam `json:"claims" form:"claims"`
+	Page   int        `json:"page" form:"page"  binding:"required"`
+	Size   int        `json:"size" form:"size"  binding:"required"`
+	Pid    string     `json:"pid" form:"pid" binding:"required"`
+}
+
+// ExitProjectParam 退出项目
+type ExitProjectParam struct {
+	Claims *BaseParam `json:"claims" form:"claims"`
+	Pid    string     `json:"pid" form:"pid" binding:"required"`
+}
+
 // JoinProjectParam 创建项目参数
 type JoinProjectParam projectBaseParam
 

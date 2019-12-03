@@ -54,8 +54,8 @@ func (t *TeamProject) CreateProject(p *params.CreateProjectParam) error {
 	return err
 }
 
-// IsExistTeam 判断是否存在团队
-func (t *TeamProject) IsExistTeam(pid string) error {
+// IsExistProject 判断是否存在项目
+func (t *TeamProject) IsExistProject(pid string) error {
 	query := bson.M{
 		"_id":    bson.ObjectIdHex(pid),
 		"status": TeamProjectStatusPublic,
